@@ -1,6 +1,20 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
+# Author Schemas
+class AuthorCreate(BaseModel):
+    name: str
+
+class AuthorUpdate(BaseModel):
+    name: Optional[str] = None
+
+class AuthorRead(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
 # Book Schemas
 class BookBase(BaseModel):
     title: str
@@ -20,25 +34,11 @@ class BookUpdate(BaseModel):
 
 class BookRead(BookBase):
     id: int
-    authors: List[str]
+    authors: List[AuthorRead]
     categories: List[str]
     
     class Config:
-        orm_mode = True   
-
-# Author Schemas
-class AuthorCreate(BaseModel):
-    name: str
-
-class AuthorUpdate(BaseModel):
-    name: Optional[str] = None
-
-class AuthorRead(BaseModel):
-    id: int
-    name: str
-
-    class Config:
-        orm_mode = True
+        from_attributes = True   
 
 # Category Schemas
 class CategoryCreate(BaseModel):
@@ -52,4 +52,4 @@ class CategoryRead(BaseModel):
     name: str
 
     class Config: 
-        orm_mode = True     
+        from_attributes = True     
