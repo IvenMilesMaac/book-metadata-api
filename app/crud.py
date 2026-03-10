@@ -136,10 +136,11 @@ def delete_category(db: Session, category_id: int):
 
 # ----- Analytical Queries -----
 
-def get_books_by_rating(db: Session, skip: int=0, limit: int=10):
+def get_books_by_rating(db: Session, skip: int=0, limit: int=10, min_ratings: int=0):
     return (
         db.query(models.Book)
         .filter(models.Book.average_rating.isnot(None))
+        .filter(models.Book.ratings_count >= min_ratings) # make sorting by ratings meaningful
         .order_by(desc(models.Book.average_rating))
         .offset(skip)
         .limit(limit)

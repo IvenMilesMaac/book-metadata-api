@@ -46,8 +46,8 @@ def delete_book(book_id: int, db: Session=Depends(get_db)):
 # ----- Analytical Endpoints -----    
  
 @router.delete("/top/rated", response_model=List[schemas.BookRead])
-def get_top_rated_books(skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
-    return crud.get_books_by_rating(db, skip=skip, limit=limit)  
+def get_top_rated_books(skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), min_ratings: int=Query(default=0, ge=0), db: Session=Depends(get_db)):
+    return crud.get_books_by_rating(db, skip=skip, limit=limit, min_ratings=min_ratings)  
 
 @router.get("/filter/category/{category_id}", response_model=List[schemas.BookRead])
 def get_books_by_category(category_id: int, skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
