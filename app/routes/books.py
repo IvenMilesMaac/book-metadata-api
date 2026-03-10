@@ -62,3 +62,11 @@ def get_books_by_author(author_id: int, skip: int=Query(0, ge=0), limit: int=Que
     if books is None:
         raise HTTPException(status_code=404, detail="Author not found")
     return books 
+
+@router.get("/search/", response_model=List[schemas.BookRead])
+def search_books(keyword: str=Query(..., min_length=1), skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
+    return crud.search_books_by_title(db, keyword=keyword, skip=skip, limit=limit)
+
+@router.get("/most-popular/", response_model=List[schemas.BookRead])
+def get_most_popular_books(skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
+    return crud.get_books_by_rating_count(db, skip=skip, limit=limit)

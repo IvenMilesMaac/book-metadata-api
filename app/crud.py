@@ -136,7 +136,7 @@ def delete_category(db: Session, category_id: int):
 
 # ----- Analytical Queries -----
 
-def get_books_by_rating(db: Session, skip: int=0, limit: int=10, min_ratings: int=0):
+def get_books_by_rating(db: Session, skip: int=0, limit: int=100, min_ratings: int=0):
     return (
         db.query(models.Book)
         .filter(models.Book.average_rating.isnot(None))
@@ -160,6 +160,25 @@ def get_books_by_author(db: Session, author_id: int, skip: int=0, limit: int=100
     return (
         db.query(models.Book)
         .filter(models.Book.authors.any(models.Author.id == author_id))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def search_books_by_title(db: Session, keyword: str, skip: int=0, limit: int=100):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.title.ilike(f"%{keyword}%"))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def get_books_by_rating_count(db: Session, skip: int=0, limit: int=100):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.ratings_count.isnot(None))
+        .order_by(desc(models.Book.ratings_count))
         .offset(skip)
         .limit(limit)
         .all()
