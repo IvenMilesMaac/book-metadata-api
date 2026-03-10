@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from app.database import SessionLocal, engine
 from app import models
 
+models.Base.metadata.create_all(bind=engine)
+
 CSV_FILE = "books.csv"
 LIMIT = 1000
 
