@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
+from sqlalchemy import desc
 
 # ----- CRUD operations for Books -----
 def create_book(db: Session, book: schemas.BookCreate):
@@ -131,3 +132,34 @@ def delete_category(db: Session, category_id: int):
     db.delete(db_category)
     db.commit()
     return db_category
+
+
+# ----- Analytical Queries -----
+
+def get_books_by_rating(db: Session, skip: int=0, limit: int=10):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.average_rating.isnot(None))
+        .order_by(desc(models.Book.average_rating))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def get_books_by_category(db: Session, category_id: int, skip: int=0, limit: int=100):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.categories.any(models.Category.id == category_id))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+def get_books_by_author(db: Session, author_id: int, skip: int=0, limit: int=100):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.authors.any(models.Author.id == author_id))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )

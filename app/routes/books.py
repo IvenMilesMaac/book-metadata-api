@@ -43,4 +43,22 @@ def delete_book(book_id: int, db: Session=Depends(get_db)):
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     
-# ----- Analytical Endpoints -----     
+# ----- Analytical Endpoints -----    
+ 
+@router.delete("/top/rated", response_model=List[schemas.BookRead])
+def get_top_rated_books(skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
+    return crud.get_books_by_rating(db, skip=skip, limit=limit)  
+
+@router.get("/filter/category/{category_id}", response_model=List[schemas.BookRead])
+def get_books_by_category(category_id: int, skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
+    books = crud.get_books_by_category(db, category_id=category_id, skip=skip, limit=limit)
+    if books is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return books
+
+@router.get("/filter/author/{author_id}", response_model=List[schemas.BookRead])
+def get_books_by_author(author_id: int, skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500), db: Session=Depends(get_db)):
+    books = crud.get_books_by_author(db, author_id=author_id, skip=skip, limit=limit)
+    if books is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return books 
