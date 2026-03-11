@@ -21,17 +21,27 @@ source venv/bin/activate
 3. Install dependencies
 pip install -r requirements.txt
 
+4. Set up environment variables
+Create a .env file in the project root with the following:
+API_KEY = 8d9a1fe6425324282d852de957b6d09dfa1373928022351034d2560f00af476f
+
 ## Running the API
 uvicorn app.main:app --reload
 
 Then go to http://127.0.0.1:8000/docs to view and interact with the API
 
+## Authentication
+Write operations (POST, PATCH, DELETE) require an API key passed in the request header as 'Authorization'.
+In Swagger UI, click the Authorize button at the top of the /docs page and enter the API key before testing write endpoints.
+
 ## Populating the Database
-The dataset used is the Googreads Books dataset from Kaggle:
+The dataset used is the Goodreads Books dataset from Kaggle:
 https://www.kaggle.com/datasets/jealousleopard/goodreadsbooks
 
 Download books.csv and place it in the project root, then run: 
 python seed.py
+
+Note: The Goodreads dataset does not include category data. Category endpoints are fully implemented but will return empty results unless categories are added manually via the API.
 
 ## API Documentation
 See [API Documentation](___) for a full list of endpoints, parameters, and example responses.
