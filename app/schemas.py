@@ -15,6 +15,20 @@ class AuthorRead(BaseModel):
     class Config:
         from_attributes = True
 
+# Category Schemas
+class CategoryCreate(BaseModel):
+    name: str
+
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None    
+
+class CategoryRead(BaseModel):
+    id: int
+    name: str
+
+    class Config: 
+        from_attributes = True     
+
 # Book Schemas
 class BookBase(BaseModel):
     title: str
@@ -35,21 +49,7 @@ class BookUpdate(BaseModel):
 class BookRead(BookBase):
     id: int
     authors: List[AuthorRead]
-    categories: List[str]
+    categories: List[CategoryRead]
     
     class Config:
-        from_attributes = True   
-
-# Category Schemas
-class CategoryCreate(BaseModel):
-    name: str
-
-class CategoryUpdate(BaseModel):
-    name: Optional[str] = None    
-
-class CategoryRead(BaseModel):
-    id: int
-    name: str
-
-    class Config: 
-        from_attributes = True     
+        from_attributes = True 
