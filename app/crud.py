@@ -110,7 +110,7 @@ def create_category(db: Session, category: schemas.CategoryCreate):
     return db_category
 
 def get_category(db: Session, category_id: int):
-    category = db.query(models.Category).filter(models.Catgory.id == category_id).irst()
+    category = db.query(models.Category).filter(models.Category.id == category_id).first()
     return category
 
 def get_categories(db: Session, skip: int=0, limit: int=100):
