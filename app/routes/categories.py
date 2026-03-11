@@ -22,7 +22,7 @@ def create_category(category: schemas.CategoryCreate, db: Session=Depends(get_db
 
 @router.get("/{category_id}", response_model=schemas.CategoryRead)
 def get_category(category_id: int, db: Session=Depends(get_db)):
-    category = get_category(db, category_id)
+    category = crud.get_category(db, category_id)
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
     return category
