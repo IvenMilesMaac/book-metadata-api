@@ -18,7 +18,7 @@ def get_db():
 
 @router.post("/", response_model=schemas.CategoryRead, status_code=201)
 def create_category(category: schemas.CategoryCreate, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
-    return crud.create_category(category)
+    return crud.create_category(db, category)
 
 @router.get("/{category_id}", response_model=schemas.CategoryRead)
 def get_category(category_id: int, db: Session=Depends(get_db)):
