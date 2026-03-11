@@ -46,9 +46,13 @@ def update_book(db: Session, book_id: int, book_data: schemas.BookUpdate):
 
     # Replace foreign entities if new list provided
     if book_data.author_ids is not None:
-        db_book.authors = db.query(models.Author).filter(models.Author.id.in_(book_data.author_ids).all())
+        db_book.authors = db.query(models.Author).filter(models.Author.id.in_(book_data.author_ids)).all()
     if book_data.category_ids is not None:
-        db_book.category = db.query(models.Category).filter(models.Category.id.in_(book_data.category_ids).all())
+        db_book.categories = db.query(models.Category).filter(models.Category.id.in_(book_data.category_ids)).all()
+
+    db.commit()
+    db.refresh(db_book)
+    return db_book
 
 def delete_book(db: Session, book_id: int):
     db_book = get_book(db, book_id)
