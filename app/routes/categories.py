@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import crud, schemas
 from ..database import SessionLocal
+from ..auth import require_api_key
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
@@ -16,7 +17,7 @@ def get_db():
 # ----- Basic CRUD Endpoints -----
 
 @router.post("/", response_model=schemas.CategoryRead, status_code=201)
-def create_category(category: schemas.CategoryCreate, db: Session=Depends(get_db)):
+def create_category(category: schemas.CategoryCreate, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     return crud.create_category(db.category)
 
 @router.get("/{category_id}", response_model=schemas.CategoryRead)
@@ -31,14 +32,14 @@ def get_categories(skip: int=Query(0, ge=0), limit: int=Query(100, ge=1, le=500)
     return crud.get_categories(db, skip=skip, limit=limit)
 
 @router.patch("/{category_id}", response_model=schemas.CategoryRead)
-def update_category(category_id: int, category_data: schemas.CategoryUpdate, db: Session=Depends(get_db)):
+def update_category(category_id: int, category_data: schemas.CategoryUpdate, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     category = crud.update_category(db, category_id, category_data)
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
     return category
 
 @router.delete("/{category_id}", status_code=204)
-def delete_category(category_id: int, db: Session=Depends(get_db)):
+def delete_category(category_id: int, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     category = delete_category(db, category_id)
     if not category:
         raise HTTPException(status_code=404, detail="Category not found") 

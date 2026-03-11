@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import crud, schemas
 from ..database import SessionLocal  
+from ..auth import require_api_key
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -16,7 +17,7 @@ def get_db():
 # ----- Basic CRUD Endpoints -----
 
 @router.post("/", response_model=schemas.BookRead, status_code=201)
-def create_book(book: schemas.BookCreate, db: Session=Depends(get_db)):
+def create_book(book: schemas.BookCreate, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     return crud.create_book(db, book)
 
 @router.get("/", response_model=List[schemas.BookRead])
@@ -31,14 +32,14 @@ def get_book(book_id: int, db: Session=Depends(get_db)):
     return book
 
 @router.patch("/{book_id}", response_model=schemas.BookRead)
-def update_book(book_id: int, book_data: schemas.BookUpdate, db: Session=Depends(get_db)):
+def update_book(book_id: int, book_data: schemas.BookUpdate, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     book = crud.update_book(db, book_id, book_data)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
     return book
 
 @router.delete("/{book_id}", status_code=204)
-def delete_book(book_id: int, db: Session=Depends(get_db)):
+def delete_book(book_id: int, db: Session=Depends(get_db), api_key: str=Depends(require_api_key)):
     book = crud.delete_book(db, book_id)
     if not book:
         raise HTTPException(status_code=404, detail="Book not found")
