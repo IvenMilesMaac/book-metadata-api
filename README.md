@@ -50,7 +50,7 @@ Run the test suite with:
 pytest test.py -v
 
 ## API Documentation
-See [API Documentation](___) for a full list of endpoints, parameters, and example responses.
+See [API Documentation](./api-doc.pdf) for a full list of endpoints, parameters, and example responses.
 
 ## Deployed API
 The live API is available at: https://book-metadata-api.onrender.com/
