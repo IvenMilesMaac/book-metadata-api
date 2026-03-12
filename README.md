@@ -34,7 +34,7 @@ Then go to http://127.0.0.1:8000/docs to view and interact with the API
 Write operations (POST, PATCH, DELETE) require an API key passed in the request header as 'Authorization'.
 In Swagger UI, click the Authorize button at the top of the /docs page and enter the API key before testing write endpoints.
 
-The API key for the deployed version is provided in the technical report.
+The API key for the deployed version is provided in the [API Documentation](./api-doc.pdf).
 
 ## Populating the Database
 The dataset used is the Goodreads Books dataset from Kaggle:
